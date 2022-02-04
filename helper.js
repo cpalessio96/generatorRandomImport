@@ -99,8 +99,8 @@ const getObjectUser = (managersByLevel, allNumbersStructurerUser, descCdc3, desc
   let idPerson = 1;
   return managersByLevel.map((level) => level.map(({ id, boss }) => {
     const userByStructure = [...Array(allNumbersStructurerUser[0] - 1).keys()].map(() => {
-      const indexCdc3Random = getRandomNumber(0, descCdc3.length);
-      const indexCdc4Random = getRandomNumber(0, descCdc4.length);
+      const indexCdc3Random = getRandomNumber(0, descCdc3.length - 1);
+      const indexCdc4Random = getRandomNumber(0, descCdc4.length - 1);
       const objectUser = {
         DESC_LEGAL: "generatorImportRandom",
         COGNOME: faker.name.lastName(),
@@ -118,8 +118,8 @@ const getObjectUser = (managersByLevel, allNumbersStructurerUser, descCdc3, desc
       return objectUser;
     });
     allNumbersStructurerUser.shift();
-    const indexCdc3Random = getRandomNumber(0, descCdc3.length);
-    const indexCdc4Random = getRandomNumber(0, descCdc4.length);
+    const indexCdc3Random = getRandomNumber(0, descCdc3.length - 1);
+    const indexCdc4Random = getRandomNumber(0, descCdc4.length - 1);
     userByStructure.push({
       DESC_LEGAL: "generatorImportRandom",
       COGNOME: faker.name.lastName(),
