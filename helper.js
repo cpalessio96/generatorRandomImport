@@ -1,3 +1,8 @@
+const { faker } = require("@faker-js/faker");
+
+const getRandomNumber = (min, max) => Math.floor(
+  Math.random() * (max - min + 1) + min,
+);
 /**
  * dati un minimo un massimo e un valore di skew da un valore random
  * se si chiedono molti valori, la curva assomiglierà sempre di più ad una gaussiana
@@ -76,9 +81,7 @@ const getManagerByLevel = (numberManagersForHierarchy, allManagersIds, rootUserI
     tempManagerUpLevel = currentLevelManagers.map(({ id }) => {
       const maxManagers = tempManagerUpLevel.length - 1;
       const minManagers = 0;
-      const randomIndexManagers = Math.floor(
-        Math.random() * (maxManagers - minManagers + 1) + minManagers,
-      );
+      const randomIndexManagers = getRandomNumber(minManagers, maxManagers);
       const manager = tempManagerUpLevel[`${randomIndexManagers}`];
       return { id, boss: manager.id };
     });
@@ -92,18 +95,20 @@ const getManagerByLevel = (numberManagersForHierarchy, allManagersIds, rootUserI
  * @param {Array} allNumbersStructurerUser lista dei numeri di utenti di una struttura
  * @returns {Array} array di oggetti di utenti
  */
-const getObjectUser = (managersByLevel, allNumbersStructurerUser) => {
+const getObjectUser = (managersByLevel, allNumbersStructurerUser, descCdc3, descCdc4) => {
   let idPerson = 1;
   return managersByLevel.map((level) => level.map(({ id, boss }) => {
     const userByStructure = [...Array(allNumbersStructurerUser[0] - 1).keys()].map(() => {
+      const indexCdc3Random = getRandomNumber(0, descCdc3.length);
+      const indexCdc4Random = getRandomNumber(0, descCdc4.length);
       const objectUser = {
         DESC_LEGAL: "generatorImportRandom",
-        COGNOME: "Catania",
-        NOME: "Alessio",
+        COGNOME: faker.name.lastName(),
+        NOME: faker.name.firstName(),
         ID_PERSON: `Collab_${idPerson}`,
-        EMAIL: "email@example.com",
-        DESC_CDC3: "test2",
-        DESC_CDC4: "test",
+        EMAIL: faker.internet.exampleEmail(),
+        DESC_CDC3: descCdc3[`${indexCdc3Random}`],
+        DESC_CDC4: descCdc4[`${indexCdc4Random}`],
         CODICE_FISCALE: "XXXXXXX",
         STATO: "PAYROLL",
         RESPONSABILE_1: id,
@@ -113,14 +118,16 @@ const getObjectUser = (managersByLevel, allNumbersStructurerUser) => {
       return objectUser;
     });
     allNumbersStructurerUser.shift();
+    const indexCdc3Random = getRandomNumber(0, descCdc3.length);
+    const indexCdc4Random = getRandomNumber(0, descCdc4.length);
     userByStructure.push({
       DESC_LEGAL: "generatorImportRandom",
-      COGNOME: "Catania",
-      NOME: "AlessioBOSS",
-      EMAIL: "email@example.com",
+      COGNOME: faker.name.lastName(),
+      NOME: faker.name.firstName(),
+      EMAIL: faker.internet.exampleEmail(),
       ID_PERSON: id,
-      DESC_CDC3: "test2",
-      DESC_CDC4: "test",
+      DESC_CDC3: descCdc3[`${indexCdc3Random}`],
+      DESC_CDC4: descCdc4[`${indexCdc4Random}`],
       CODICE_FISCALE: "XXXXXXX",
       STATO: "PAYROLL",
       RESPONSABILE_1: boss,
@@ -130,9 +137,12 @@ const getObjectUser = (managersByLevel, allNumbersStructurerUser) => {
   })).flat(2);
 };
 
+const getDescCdc = (number) => [...Array(number).keys()].map(() => faker.name.jobTitle());
+
 module.exports = {
   randnBm,
   getNumberManagerByHierarchy,
   getManagerByLevel,
   getObjectUser,
+  getDescCdc,
 };

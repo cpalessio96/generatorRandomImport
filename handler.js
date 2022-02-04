@@ -4,6 +4,7 @@ const {
   getNumberManagerByHierarchy,
   getManagerByLevel,
   getObjectUser,
+  getDescCdc,
 } = require("./helper");
 
 const main = async () => {
@@ -11,6 +12,10 @@ const main = async () => {
   const [debug, numberUsers, averageStructureUsers, maxHierarchyLevels] = process.argv.slice(2);
 
   const rootUserId = "Root_1";
+
+  // TODO parametrizzare la creazione e il numero di cdc
+  const descCdc3 = getDescCdc(20);
+  const descCdc4 = getDescCdc(40);
 
   const numberStructure = Math.round(numberUsers / averageStructureUsers);
 
@@ -46,7 +51,7 @@ const main = async () => {
   }
 
   const managersByLevel = getManagerByLevel(numberManagersForHierarchy, allManagersIds, rootUserId);
-  const objectUsers = getObjectUser(managersByLevel, allNumbersStructurerUser);
+  const objectUsers = getObjectUser(managersByLevel, allNumbersStructurerUser, descCdc3, descCdc4);
   fs.writeFileSync("result/users.json", JSON.stringify({ objectUsers }));
 };
 
