@@ -1,11 +1,11 @@
-const { randnBm, getNumberManagerByHierarchy, getManagerByLevel } = require("./helper");
+const fs = require("fs");
+const {
+  randnBm,
+  getNumberManagerByHierarchy,
+  getManagerByLevel,
+  getObjectUser,
+} = require("./helper");
 
-/**
- * @param {Int} min
- * @param {Int} max
- * @param {Int} skew sposta la media verso il minimo o verso il massimo
- * @returns {Int} numero random
- */
 const main = async () => {
   // variabili in ingresso
   const [debug, numberUsers, averageStructureUsers, maxHierarchyLevels] = process.argv.slice(2);
@@ -42,12 +42,12 @@ const main = async () => {
     // qui abbiamo indicazione della gerarchi effettiva.
     const effectiveHierarchy = numberManagersForHierarchy.length;
     // eslint-disable-next-line no-console
-    console.log({ effectiveHierarchy });
+    console.log({ effectiveHierarchy, numberManagersForHierarchy });
   }
 
   const managersByLevel = getManagerByLevel(numberManagersForHierarchy, allManagersIds, rootUserId);
-  // eslint-disable-next-line no-console
-  console.log(JSON.stringify({ managersByLevel }));
+  const objectUsers = getObjectUser(managersByLevel, allNumbersStructurerUser);
+  fs.writeFileSync("result/users.json", JSON.stringify({ objectUsers }));
 };
 
 main();

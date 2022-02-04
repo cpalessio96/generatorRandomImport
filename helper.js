@@ -44,7 +44,7 @@ const getNumberManagerByHierarchy = (hierarchyLevels, numStructures, maxManagers
   return [...Array(parseInt(hierarchyLevels, 10)).keys()]
     .map((item, index) => {
       if (parseInt(hierarchyLevels, 10) === index + 1) {
-        return numStructures.length - sumManager;
+        return numStructures - sumManager;
       }
       const maxManagers = maxManagersRaw * offset;
       const minManagers = maxManagers - maxManagers * 0.7;
@@ -65,7 +65,7 @@ const getNumberManagerByHierarchy = (hierarchyLevels, numStructures, maxManagers
 const getManagerByLevel = (numberManagersForHierarchy, allManagersIds, rootUserId) => {
   let initArray = 0;
   let tempManagerUpLevel = [];
-  numberManagersForHierarchy.map((item, index) => {
+  return numberManagersForHierarchy.map((item, index) => {
     const currentLevelManagers = allManagersIds.slice(initArray, initArray + item);
     initArray += item;
     if (index === 0) {
@@ -86,8 +86,53 @@ const getManagerByLevel = (numberManagersForHierarchy, allManagersIds, rootUserI
   }, []);
 };
 
+/**
+ * Genera oggetto con tutti gli utenti e tutti i parametri
+ * @param {Array} managersByLevel lista di livelli di gerarchia
+ * @param {Array} allNumbersStructurerUser lista dei numeri di utenti di una struttura
+ * @returns {Array} array di oggetti di utenti
+ */
+const getObjectUser = (managersByLevel, allNumbersStructurerUser) => {
+  let idPerson = 1;
+  return managersByLevel.map((level) => level.map(({ id, boss }) => {
+    const userByStructure = [...Array(allNumbersStructurerUser[0] - 1).keys()].map(() => {
+      const objectUser = {
+        DESC_LEGAL: "generatorImportRandom",
+        COGNOME: "Catania",
+        NOME: "Alessio",
+        ID_PERSON: `Collab_${idPerson}`,
+        EMAIL: "email@example.com",
+        DESC_CDC3: "test2",
+        DESC_CDC4: "test",
+        CODICE_FISCALE: "XXXXXXX",
+        STATO: "PAYROLL",
+        RESPONSABILE_1: id,
+        LANGUAGE: "it",
+      };
+      idPerson += 1;
+      return objectUser;
+    });
+    allNumbersStructurerUser.shift();
+    userByStructure.push({
+      DESC_LEGAL: "generatorImportRandom",
+      COGNOME: "Catania",
+      NOME: "AlessioBOSS",
+      EMAIL: "email@example.com",
+      ID_PERSON: id,
+      DESC_CDC3: "test2",
+      DESC_CDC4: "test",
+      CODICE_FISCALE: "XXXXXXX",
+      STATO: "PAYROLL",
+      RESPONSABILE_1: boss,
+      LANGUAGE: "it",
+    });
+    return userByStructure;
+  })).flat(2);
+};
+
 module.exports = {
   randnBm,
   getNumberManagerByHierarchy,
   getManagerByLevel,
+  getObjectUser,
 };
