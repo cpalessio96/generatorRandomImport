@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { Parser } = require("json2csv");
 const {
   randnBm,
   getNumberManagerByHierarchy,
@@ -52,7 +53,11 @@ const main = async () => {
 
   const managersByLevel = getManagerByLevel(numberManagersForHierarchy, allManagersIds, rootUserId);
   const objectUsers = getObjectUser(managersByLevel, allNumbersStructurerUser, descCdc3, descCdc4);
-  fs.writeFileSync("result/users.json", JSON.stringify({ objectUsers }));
+  const json2CsvParser = new Parser({
+    fields: Object.keys(objectUsers[0]).map((item) => item),
+  });
+  const file = json2CsvParser.parse(objectUsers);
+  fs.writeFileSync("result/generatorRandomImport.csv", file);
 };
 
 main();
