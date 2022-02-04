@@ -25,6 +25,7 @@ i parametri che accetta in input per customizzare l'import sono i seguenti:
 # Installazione
 
 dopo aver clonato il repository eseguire
-```npm install``
+```npm ci``
+e creare la cartella result.
 dopo l'installazione può essere eseguito l'handler passando i parametri indicati sopra
 
