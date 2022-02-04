@@ -27,6 +27,7 @@
     }
   },
   "dependencies": {
+    "@faker-js/faker": "^6.0.0-alpha.5",
     "cz-conventional-changelog": "^3.0.2"
   }
 }
