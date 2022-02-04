@@ -3,6 +3,10 @@ const { faker } = require("@faker-js/faker");
 const getRandomNumber = (min, max) => Math.floor(
   Math.random() * (max - min + 1) + min,
 );
+const getEmailByRole = (email, role) => {
+  const partsEmail = email.split("@");
+  return `${partsEmail[0]}+${role}@${partsEmail[1]}`;
+};
 /**
  * dati un minimo un massimo e un valore di skew da un valore random
  * se si chiedono molti valori, la curva assomiglierà sempre di più ad una gaussiana
@@ -95,18 +99,32 @@ const getManagerByLevel = (numberManagersForHierarchy, allManagersIds, rootUserI
  * @param {Array} allNumbersStructurerUser lista dei numeri di utenti di una struttura
  * @returns {Array} array di oggetti di utenti
  */
-const getObjectUser = (managersByLevel, allNumbersStructurerUser, descCdc3, descCdc4) => {
+const getObjectUser = ({
+  managersByLevel,
+  allNumbersStructurerUser,
+  descCdc3,
+  descCdc4,
+  firstName,
+  email,
+  rootUserId,
+  maxCollab,
+  maxBoss,
+}) => {
   let idPerson = 1;
-  return managersByLevel.map((level) => level.map(({ id, boss }) => {
+  let maxCollabToIncrement = maxCollab;
+  let maxBossToIncrement = maxBoss;
+  const allManagers = managersByLevel.map((level) => level.map(({ id, boss }) => {
     const userByStructure = [...Array(allNumbersStructurerUser[0] - 1).keys()].map(() => {
       const indexCdc3Random = getRandomNumber(0, descCdc3.length - 1);
       const indexCdc4Random = getRandomNumber(0, descCdc4.length - 1);
+      const isMyUser = maxCollabToIncrement && Math.random() < 0.5;
+      const numberUser = maxCollab - maxCollabToIncrement + 1;
       const objectUser = {
         DESC_LEGAL: "generatorImportRandom",
-        COGNOME: faker.name.lastName(),
-        NOME: faker.name.firstName(),
+        COGNOME: isMyUser ? `Collaboratore ${numberUser}` : faker.name.lastName(),
+        NOME: isMyUser ? firstName : faker.name.firstName(),
         ID_PERSON: `Collab_${idPerson}`,
-        EMAIL: faker.internet.exampleEmail(),
+        EMAIL: isMyUser ? getEmailByRole(email, `collab${numberUser}`) : faker.internet.exampleEmail(),
         DESC_CDC3: descCdc3[`${indexCdc3Random}`],
         DESC_CDC4: descCdc4[`${indexCdc4Random}`],
         CODICE_FISCALE: "XXXXXXX",
@@ -114,17 +132,22 @@ const getObjectUser = (managersByLevel, allNumbersStructurerUser, descCdc3, desc
         RESPONSABILE_1: id,
         LANGUAGE: "it",
       };
+      if (isMyUser) {
+        maxCollabToIncrement -= 1;
+      }
       idPerson += 1;
       return objectUser;
     });
     allNumbersStructurerUser.shift();
     const indexCdc3Random = getRandomNumber(0, descCdc3.length - 1);
     const indexCdc4Random = getRandomNumber(0, descCdc4.length - 1);
+    const isMyUser = maxBossToIncrement && Math.random() < 0.5;
+    const numberUser = maxBoss - maxBossToIncrement + 1;
     userByStructure.push({
       DESC_LEGAL: "generatorImportRandom",
-      COGNOME: faker.name.lastName(),
-      NOME: faker.name.firstName(),
-      EMAIL: faker.internet.exampleEmail(),
+      COGNOME: isMyUser ? `Boss ${numberUser}` : faker.name.lastName(),
+      NOME: isMyUser ? firstName : faker.name.firstName(),
+      EMAIL: isMyUser ? getEmailByRole(email, `boss${numberUser}`) : faker.internet.exampleEmail(),
       ID_PERSON: id,
       DESC_CDC3: descCdc3[`${indexCdc3Random}`],
       DESC_CDC4: descCdc4[`${indexCdc4Random}`],
@@ -133,8 +156,27 @@ const getObjectUser = (managersByLevel, allNumbersStructurerUser, descCdc3, desc
       RESPONSABILE_1: boss,
       LANGUAGE: "it",
     });
+    if (isMyUser) {
+      maxBossToIncrement -= 1;
+    }
     return userByStructure;
   })).flat(2);
+  const indexCdc3Random = getRandomNumber(0, descCdc3.length - 1);
+  const indexCdc4Random = getRandomNumber(0, descCdc4.length - 1);
+  allManagers.push({
+    DESC_LEGAL: "generatorImportRandom",
+    COGNOME: "Root",
+    NOME: `${firstName}`,
+    EMAIL: getEmailByRole(email, "root"),
+    ID_PERSON: "ROOT",
+    DESC_CDC3: descCdc3[`${indexCdc3Random}`],
+    DESC_CDC4: descCdc4[`${indexCdc4Random}`],
+    CODICE_FISCALE: "XXXXXXX",
+    STATO: "PAYROLL",
+    RESPONSABILE_1: rootUserId,
+    LANGUAGE: "it",
+  });
+  return allManagers;
 };
 
 const getDescCdc = (number) => [...Array(number).keys()].map(() => faker.name.jobTitle());

@@ -10,7 +10,16 @@ const {
 
 const main = async () => {
   // variabili in ingresso
-  const [debug, numberUsers, averageStructureUsers, maxHierarchyLevels] = process.argv.slice(2);
+  const [
+    debug,
+    numberUsers,
+    averageStructureUsers,
+    maxHierarchyLevels,
+    firstName,
+    email,
+    maxCollab,
+    maxBoss,
+  ] = process.argv.slice(2);
 
   const rootUserId = "Root_1";
 
@@ -52,7 +61,16 @@ const main = async () => {
   }
 
   const managersByLevel = getManagerByLevel(numberManagersForHierarchy, allManagersIds, rootUserId);
-  const objectUsers = getObjectUser(managersByLevel, allNumbersStructurerUser, descCdc3, descCdc4);
+  const objectUsers = getObjectUser({
+    managersByLevel,
+    allNumbersStructurerUser,
+    descCdc3,
+    descCdc4,
+    firstName,
+    email,
+    maxCollab,
+    maxBoss,
+  });
   const json2CsvParser = new Parser({
     fields: Object.keys(objectUsers[0]).map((item) => item),
   });
