@@ -76,7 +76,8 @@ const main = async () => {
     fields: Object.keys(objectUsers[0]).map((item) => item),
   });
   const file = json2CsvParser.parse(objectUsers);
-  fs.writeFileSync("result/generatorRandomImport.csv", file);
+  const fileName = `generatorRandomImport${Date.now()}.csv`;
+  fs.writeFileSync(`result/${fileName}`, file);
 };
 
 main();
