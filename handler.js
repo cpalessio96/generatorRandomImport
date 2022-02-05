@@ -70,6 +70,7 @@ const main = async () => {
     email,
     maxCollab,
     maxBoss,
+    rootUserId,
   });
   const json2CsvParser = new Parser({
     fields: Object.keys(objectUsers[0]).map((item) => item),
