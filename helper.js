@@ -168,12 +168,12 @@ const getObjectUser = ({
     COGNOME: "Root",
     NOME: `${firstName}`,
     EMAIL: getEmailByRole(email, "root"),
-    ID_PERSON: "ROOT",
+    ID_PERSON: rootUserId,
     DESC_CDC3: descCdc3[`${indexCdc3Random}`],
     DESC_CDC4: descCdc4[`${indexCdc4Random}`],
     CODICE_FISCALE: "XXXXXXX",
     STATO: "PAYROLL",
-    RESPONSABILE_1: rootUserId,
+    RESPONSABILE_1: "",
     LANGUAGE: "it",
   });
   return allManagers;
