@@ -74,6 +74,7 @@ const main = async () => {
   });
   const json2CsvParser = new Parser({
     fields: Object.keys(objectUsers[0]).map((item) => item),
+    delimiter: ";",
   });
   const file = json2CsvParser.parse(objectUsers);
   const fileName = `generatorRandomImport${Date.now()}.csv`;
