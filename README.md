@@ -16,7 +16,7 @@ i parametri che accetta in input per customizzare l'import sono i seguenti:
 - **debug** booleano, se settato a true attiva dei log
 - **numberUsers** umero di utenti desiderato, il numero di utenti non sarà preciso
 - **averageStructureUsers** media degli utenti in una struttura
-- **maxHierarchyLevels** livelli di gerarchia massima, i livelli consigliati vanno da 1 a 6, la gerarchia non conta l'utente root, a parte casi rari la gerarchia
+- **maxHierarchyLevels** livelli di gerarchia massima, i livelli consigliati vanno da 1 a 6, la gerarchia non conta l'utente root, a parte casi rari la gerarchia effettiva potrebbe non rispettare quella in ingresso
 - **firstName** nome utente di cui si vogliono le utenze,
 - **email** email utente
 - **maxCollab** numeri collaborati massimi di cui si vuole un utenza
