@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { Parser } = require("json2csv");
+const { default: faker } = require("@faker-js/faker");
 const {
   randnBm,
   getNumberManagerByHierarchy,
@@ -19,7 +20,12 @@ const main = async () => {
     email,
     maxCollab,
     maxBoss,
+    numDifferentProfession,
   ] = process.argv.slice(2);
+
+  const professions = [
+    ...new Array(parseInt(numDifferentProfession, 10) ?? 10),
+  ].map(() => faker.name.jobTitle());
 
   const rootUserId = "Root_1";
 
@@ -71,6 +77,7 @@ const main = async () => {
     maxCollab,
     maxBoss,
     rootUserId,
+    professions,
   });
   const json2CsvParser = new Parser({
     fields: Object.keys(objectUsers[0]).map((item) => item),

@@ -109,45 +109,52 @@ const getObjectUser = ({
   rootUserId,
   maxCollab,
   maxBoss,
+  professions,
 }) => {
   let idPerson = 1;
   let maxCollabToIncrement = maxCollab;
   let maxBossToIncrement = maxBoss;
   const allManagers = managersByLevel.map((level) => level.map(({ id, boss }) => {
-    const userByStructure = [...Array(allNumbersStructurerUser[0] - 1).keys()].map(() => {
-      const indexCdc3Random = getRandomNumber(0, descCdc3.length - 1);
-      const indexCdc4Random = getRandomNumber(0, descCdc4.length - 1);
-      const isMyUser = maxCollabToIncrement && Math.random() < 0.5;
-      const numberUser = maxCollab - maxCollabToIncrement + 1;
-      const objectUser = {
-        DESC_LEGAL: "generatorImportRandom",
-        COGNOME: isMyUser ? `Collaboratore ${numberUser}` : faker.name.lastName(),
-        NOME: isMyUser ? firstName : faker.name.firstName(),
-        ID_PERSON: `Collab_${idPerson}`,
-        EMAIL: isMyUser ? getEmailByRole(email, `collab${numberUser}`) : faker.internet.exampleEmail(),
-        DESC_CDC3: descCdc3[`${indexCdc3Random}`],
-        DESC_CDC4: descCdc4[`${indexCdc4Random}`],
-        CODICE_FISCALE: "XXXXXXX",
-        STATO: "PAYROLL",
-        RESPONSABILE_1: id,
-        LANGUAGE: "it",
-      };
-      if (isMyUser) {
-        maxCollabToIncrement -= 1;
-      }
-      idPerson += 1;
-      return objectUser;
-    });
+    const isMyUserBoss = maxBossToIncrement && Math.random() < 0.5;
+    const userByStructure = [...Array(allNumbersStructurerUser[0] - 1).keys()]
+      .map((item, index) => {
+        const indexCdc3Random = getRandomNumber(0, descCdc3.length - 1);
+        const indexCdc4Random = getRandomNumber(0, descCdc4.length - 1);
+        // const isMyUser = maxCollabToIncrement && Math.random() < 0.5;
+        const isMyUser = isMyUserBoss && index === 0;
+        const numberUser = maxCollab - maxCollabToIncrement + 1;
+        const indexProfession = getRandomNumber(0, professions.length - 1);
+        const objectUser = {
+          DESC_LEGAL: "generatorImportRandom",
+          COGNOME: isMyUser ? `Collaboratore ${numberUser}` : faker.name.lastName(),
+          NOME: isMyUser ? firstName : faker.name.firstName(),
+          ID_PERSON: `Collab_${idPerson}`,
+          EMAIL: isMyUser ? getEmailByRole(email, `collab${numberUser}`) : faker.internet.exampleEmail(),
+          DESC_CDC3: descCdc3[`${indexCdc3Random}`],
+          DESC_CDC4: descCdc4[`${indexCdc4Random}`],
+          CODICE_FISCALE: "XXXXXXX",
+          STATO: "PAYROLL",
+          RESPONSABILE_1: id,
+          LANGUAGE: "it",
+          PROFESSION: professions[indexProfession],
+        };
+        if (isMyUser) {
+          maxCollabToIncrement -= 1;
+        }
+        idPerson += 1;
+        return objectUser;
+      });
     allNumbersStructurerUser.shift();
     const indexCdc3Random = getRandomNumber(0, descCdc3.length - 1);
     const indexCdc4Random = getRandomNumber(0, descCdc4.length - 1);
-    const isMyUser = maxBossToIncrement && Math.random() < 0.5;
     const numberUser = maxBoss - maxBossToIncrement + 1;
+    const indexProfession = getRandomNumber(0, professions.length - 1);
+
     userByStructure.push({
       DESC_LEGAL: "generatorImportRandom",
-      COGNOME: isMyUser ? `Boss ${numberUser}` : faker.name.lastName(),
-      NOME: isMyUser ? firstName : faker.name.firstName(),
-      EMAIL: isMyUser ? getEmailByRole(email, `boss${numberUser}`) : faker.internet.exampleEmail(),
+      COGNOME: isMyUserBoss ? `Boss ${numberUser}` : faker.name.lastName(),
+      NOME: isMyUserBoss ? firstName : faker.name.firstName(),
+      EMAIL: isMyUserBoss ? getEmailByRole(email, `boss${numberUser}`) : faker.internet.exampleEmail(),
       ID_PERSON: id,
       DESC_CDC3: descCdc3[`${indexCdc3Random}`],
       DESC_CDC4: descCdc4[`${indexCdc4Random}`],
@@ -155,14 +162,16 @@ const getObjectUser = ({
       STATO: "PAYROLL",
       RESPONSABILE_1: boss,
       LANGUAGE: "it",
+      PROFESSION: professions[indexProfession],
     });
-    if (isMyUser) {
+    if (isMyUserBoss) {
       maxBossToIncrement -= 1;
     }
     return userByStructure;
   })).flat(2);
   const indexCdc3Random = getRandomNumber(0, descCdc3.length - 1);
   const indexCdc4Random = getRandomNumber(0, descCdc4.length - 1);
+  const indexProfession = getRandomNumber(0, professions.length - 1);
   allManagers.push({
     DESC_LEGAL: "generatorImportRandom",
     COGNOME: "Root",
@@ -175,6 +184,7 @@ const getObjectUser = ({
     STATO: "PAYROLL",
     RESPONSABILE_1: "",
     LANGUAGE: "it",
+    PROFESSION: professions[indexProfession],
   });
   return allManagers;
 };
